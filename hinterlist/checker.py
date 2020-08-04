@@ -56,29 +56,35 @@ class Checker(object):
     """
 
     def __init__(self, check_url=None, scratch_url=None):
-        server = "ltetl.adr.admin.ch"
-        port = 6443
-        self.check_url = check_url if check_url is not None else "https://{s}:{p}/arcgis/rest/services/Quality/InterlisCheckerPRO/GPServer/InterlisCheckerPRO".format(s=server, p=port)
-        self.scratch_url = scratch_url if scratch_url is not None else "https://{s}:{p}/arcgis/rest/services/swisstopoUtilities/AgsScratchFolder/GPServer/AgsScratchFolder/execute".format(s=server,
-                                                                                                                                                                                           p=port)
+        """
+        :param str check_url:
+        :param str scratch_url:
+        """
+        __server = "ltetl.adr.admin.ch"
+        __port = 6443
+        self.__check_url = check_url if check_url is not None else "https://{s}:{p}/arcgis/rest/services/Quality/InterlisCheckerPRO/GPServer/InterlisCheckerPRO".format(s=__server, p=__port)
+        self.__scratch_url = scratch_url if scratch_url is not None else "https://{s}:{p}/arcgis/rest/services/swisstopoUtilities/AgsScratchFolder/GPServer/AgsScratchFolder/execute".format(s=__server,
+                                                                                                                                                                                             p=__port)
 
-    def get_scratch(self):
+    def __get_scratch(self):
         """Returns the scratch workspace of the server.
         """
         session = requests.Session()
         session.trust_env = False
-        response = session.get(url=self.scratch_url, params={"f": "json"}, auth=HTTPDigestAuth(False, False), verify=False)
+        response = session.get(url=self.__scratch_url, params={"f": "json"}, auth=HTTPDigestAuth(False, False), verify=False)
         return json.loads(response.text)["results"][0]["value"]
 
     def get_status(self, jobid, min_wait=5, max_wait=3600):
         """Returns the status of the rest job.
 
-        :param jobid: Job ID
-        :param min_wait: Min time seconds
-        :param max_wait: Max wait seconds
+        :param str jobid: Job ID
+        :param int min_wait: Min time seconds
+        :param int max_wait: Max wait seconds
+        :return: Result object
+        :rtype: Result
         """
 
-        job_url = self.check_url + "/jobs/" + jobid
+        job_url = self.__check_url + "/jobs/" + jobid
         loops = 0
         while True:
             loops += 1
@@ -115,16 +121,18 @@ class Checker(object):
     def run_check(self, xtf, ili, mode="sync", config=Config.ESRI, comment=os.environ["USERNAME"], email="#"):
         """ Execute interlis check with rest service.
 
-        :param xtf: UNC filepath of interlis file (itf or xtf) to check. Add, comma separated, catalog.xml, located in same dir as xtf.
-        :param ili: UNC filepath of interlis model to check against.
-        :param mode: choose from sync (wait until check finished) and async (don't wait)
-        :param config: choose from INTERLIS, ESRI, ORACLE
-        :param comment: any comment to identify your server job. Default is username
-        :param email: any E-mail address to send job information to. Default is None
+        :param str xtf: UNC filepath of interlis file (itf or xtf) to check. Add, comma separated, catalog.xml, located in same dir as xtf.
+        :param str ili: UNC filepath of interlis model to check against.
+        :param Mode mode: choose from sync (wait until check finished) and async (don't wait)
+        :param Config config: choose from INTERLIS, ESRI, ORACLE
+        :param str comment: any comment to identify your server job. Default is username
+        :param str email: any E-mail address to send job information to. Default is None
+        :return: Result object
+        :rtype: Result
         """
 
         # declate parameter
-        submit_url = self.check_url + "/submitJob"
+        submit_url = self.__check_url + "/submitJob"
         parameter = {
             "InputFile": xtf,
             "InputModel": ili,
@@ -144,7 +152,7 @@ class Checker(object):
         jobid = response["jobId"]
 
         # get logfile path
-        logfile = os.path.join(self.get_scratch(), "quality", "interlischeckerpro_gpserver", jobid, "scratch", "data", os.path.splitext(os.path.basename(xtf.split(",")[0]))[0] + ".log")
+        logfile = os.path.join(self.__get_scratch(), "quality", "interlischeckerpro_gpserver", jobid, "scratch", "data", os.path.splitext(os.path.basename(xtf.split(",")[0]))[0] + ".log")
 
         if mode == Mode.ASYNC:
             result = Result(jobid=jobid, logfile=logfile)
@@ -158,8 +166,7 @@ class Checker(object):
 
 class Result(object):
     def __init__(self, jobid=None, logfile=None, success=None, valid=None):
-        """ Result class.
-
+        """
         :type jobid: str
         :type logfile: str
         :type success: bool
