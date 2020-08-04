@@ -4,7 +4,7 @@ with open("README.md", "r") as rm:
     long_description = rm.read()
 
 setuptools.setup(
-    name="sedex",
+    name="hinterlist",
     version="0.0.1",
     description="INTERLIS Check Launcher",
     long_description=long_description,
