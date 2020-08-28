@@ -1,1 +1,2 @@
-import checker
+import check
+import detox
