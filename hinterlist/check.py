@@ -60,11 +60,9 @@ class Checker(object):
         :param str check_url:
         :param str scratch_url:
         """
-        __server = "ltetl.adr.admin.ch"
-        __port = 6443
-        self.__check_url = check_url if check_url is not None else "https://{s}:{p}/arcgis/rest/services/Quality/InterlisCheckerPRO/GPServer/InterlisCheckerPRO".format(s=__server, p=__port)
-        self.__scratch_url = scratch_url if scratch_url is not None else "https://{s}:{p}/arcgis/rest/services/swisstopoUtilities/AgsScratchFolder/GPServer/AgsScratchFolder/execute".format(s=__server,
-                                                                                                                                                                                             p=__port)
+        __server = "ltetl.adr.admin.ch:6443"
+        self.__check_url = check_url if check_url is not None else "https://{s}/arcgis/rest/services/Quality/InterlisCheckerPRO/GPServer/InterlisCheckerPRO".format(s=__server)
+        self.__scratch_url = scratch_url if scratch_url is not None else "https://{s}/arcgis/rest/services/swisstopoUtilities/AgsScratchFolder/GPServer/AgsScratchFolder/execute".format(s=__server)
 
     def __get_scratch(self):
         """Returns the scratch workspace of the server.
