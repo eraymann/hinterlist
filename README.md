@@ -20,17 +20,17 @@ Version|Release Notes
 
 ```python
 # import module
-from hinterlist import checker
+from hinterlist import check
 
-# Create instance of Checker with default swisstopo ETL prod server paths:
-mychecker = checker.Checker()
+# Create instance of Checker with default server paths
+mychecker = check.Checker()
 
-# Submit synchroneous job, d.h. wait until check finished
+# Submit synchroneous job, i.e. wait until check finished
 result = mychecker.run_check(
     xtf=r"P:\ath\to\interlis1.itf",
     ili=r"P:\ath\to\model.ili",
-    mode=checker.Mode.SYNC,
-    config=checker.Config.ESRI
+    mode=check.Mode.SYNC,
+    config=check.Config.ESRI
 )
 
 # Print results
@@ -40,3 +40,5 @@ print(result.success)
 print(result.valid)
 
 ```
+ ### Get Structure of Interlis 1 file
+TODO

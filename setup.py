@@ -5,8 +5,8 @@ with open("README.md", "r") as rm:
 
 setuptools.setup(
     name="hinterlist",
-    version="0.0.1",
-    description="INTERLIS Check Launcher",
+    version="0.0.2",
+    description="INTERLIS Tools Collection",
     long_description=long_description,
     long_description_content_type="text/markdown",
     url="https://github.com/eraymann/hinterlist",
