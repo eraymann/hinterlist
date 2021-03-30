@@ -13,7 +13,9 @@ That's it.
 ## Version History
 Version|Release Notes
 ---|---
-0.0.1|Initial Version
+0.0.3|server alias as optional parameter
+0.0.2|detox submodule added
+0.0.1|initial version
 
 ## Examples
 ### Check Interlis 1 file
@@ -22,10 +24,10 @@ Version|Release Notes
 # import module
 from hinterlist import check
 
-# Create instance of Checker with default server paths
-mychecker = check.Checker()
+# create instance of Checker with default server paths
+mychecker = check.Checker(server="gugus.dada.admin.ch:6443")
 
-# Submit synchroneous job, i.e. wait until check finished
+# submit synchroneous job, i.e. wait until check finished
 result = mychecker.run_check(
     xtf=r"P:\ath\to\interlis1.itf",
     ili=r"P:\ath\to\model.ili",
