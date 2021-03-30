@@ -1,29 +1,4 @@
 # coding=utf-8
-
-# MIT License
-#
-# Copyright (c) 2020 Elias Raymann
-#
-# Permission is hereby granted, free of charge, to any person obtaining a copy
-# of this software and associated documentation files (the "Software"), to deal
-# in the Software without restriction, including without limitation the rights
-# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-# copies of the Software, and to permit persons to whom the Software is
-# furnished to do so, subject to the following conditions:
-#
-# The above copyright notice and this permission notice shall be included in all
-# copies or substantial portions of the Software.
-#
-# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-# SOFTWARE.
-
-
-# import modules
 import json
 import os
 import re
@@ -31,6 +6,9 @@ import time
 
 import requests
 from requests.auth import HTTPDigestAuth
+from requests.packages.urllib3.exceptions import InsecureRequestWarning
+
+requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
 
 
 class Status(object):
@@ -50,21 +28,18 @@ class Config(object):
     ORACLE = "ORACLE"
 
 
-class Checker(object):
+class Checker:
     """Checks Interlis1 or Interlis2 files on server with rest-service.
     Neither error handling is implemented nor user inputs will be checked.
     """
 
-    def __init__(self, check_url=None, scratch_url=None):
+    def __init__(self, check_url=None, scratch_url=None, server="ltetl.adr.admin.ch:6443"):
         """
         :param str check_url:
         :param str scratch_url:
         """
-        __server = "ltetl.adr.admin.ch"
-        __port = 6443
-        self.__check_url = check_url if check_url is not None else "https://{s}:{p}/arcgis/rest/services/Quality/InterlisCheckerPRO/GPServer/InterlisCheckerPRO".format(s=__server, p=__port)
-        self.__scratch_url = scratch_url if scratch_url is not None else "https://{s}:{p}/arcgis/rest/services/swisstopoUtilities/AgsScratchFolder/GPServer/AgsScratchFolder/execute".format(s=__server,
-                                                                                                                                                                                             p=__port)
+        self.__check_url = check_url if check_url is not None else "https://{s}/arcgis/rest/services/Quality/InterlisCheckerPRO/GPServer/InterlisCheckerPRO".format(s=server)
+        self.__scratch_url = scratch_url if scratch_url is not None else "https://{s}/arcgis/rest/services/swisstopoUtilities/AgsScratchFolder/GPServer/AgsScratchFolder/execute".format(s=server)
 
     def __get_scratch(self):
         """Returns the scratch workspace of the server.
