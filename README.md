@@ -6,13 +6,14 @@ This module contains tools
 * manipulate interlis1 files such as removing unused topics and tables
 
 ## Install
-``pip install <path_to_your_wheel.whl>``
+``pip install hinterlist``  
 
 That's it.
 
 ## Version History
 Version|Release Notes
 ---|---
+0.0.4|error count in result
 0.0.3|server alias as optional parameter
 0.0.2|detox submodule added
 0.0.1|initial version
@@ -40,6 +41,7 @@ print(result.jobid)
 print(result.logfile)
 print(result.success)
 print(result.valid)
+print(result.errors)
 
 ```
  ### Get Structure of Interlis 1 file

@@ -1,7 +1,6 @@
 # coding=utf-8
 import json
 import os
-import re
 import time
 
 import requests
@@ -82,15 +81,11 @@ class Checker:
         # Check Result
         result = Result(jobid=jobid)
         if job_status == Status.SUCCEEDED:
-            if re.match("(?s).*completed with [0-9]+ (errors|warnings|infos)+(?s).*", str(response["messages"])):
-                result.success = True
-                result.valid = False
-            else:
-                result.success = True
-                result.valid = True
+            result.success = True
+            result.errors = int(session.get(url=job_url + "/results/ErrorCount", params={"f": "json"}, auth=HTTPDigestAuth(False, False), verify=False).json()["value"])
+            result.valid = result.errors == 0
         else:
             result.success = False
-            result.valid = None
         return result
 
     def run_check(self, xtf, ili, mode="sync", config=Config.ESRI, comment=os.environ["USERNAME"], email="#"):
@@ -140,15 +135,17 @@ class Checker:
 
 
 class Result(object):
-    def __init__(self, jobid=None, logfile=None, success=None, valid=None):
+    def __init__(self, jobid, logfile=None, success=None, valid=None, errors=None):
         """
         :type jobid: str
         :type logfile: str
         :type success: bool
         :type valid: bool
+        :type errors: int
         """
 
         self.jobid = jobid
         self.logfile = logfile
         self.success = success
         self.valid = valid
+        self.errors = errors
