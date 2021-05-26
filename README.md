@@ -13,6 +13,7 @@ That's it.
 ## Version History
 Version|Release Notes
 ---|---
+0.0.5|detox either with 'keep' or 'remove' parameter
 0.0.4|error count in result
 0.0.3|server alias as optional parameter
 0.0.2|detox submodule added

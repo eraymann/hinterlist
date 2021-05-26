@@ -37,13 +37,17 @@ def get_skeleton(in_file):
     return inv
 
 
-def remove_unused_tables(in_file, out_file, keep):
+def remove_unused_tables(in_file, out_file, keep=None, remove=None):
     """Removes all unused topics from itf for faster processing.
 
     :param str in_file: Path to the interlis1 input file
     :param str out_file: Path to cleaned interlis1 output file
     :param dict keep: Dictionary with topics/tables to keep
+    :param dict remove: Dictionary with topics/tables to keep
     """
+
+    if keep is None and remove is None:
+        return
 
     if not os.path.isfile(in_file):
         raise IOError(errno.ENOENT, os.strerror(errno.ENOENT), in_file)
@@ -67,7 +71,11 @@ def remove_unused_tables(in_file, out_file, keep):
                     current_topi = line.replace("TOPI", "").strip()
                 if line.startswith("TABL"):
                     current_table = line.replace("TABL", "").strip()
-                    if current_topi not in keep or current_table not in keep[current_topi]:
+                    if (
+                            (keep is not None and (current_topi not in keep or current_table not in keep.get(current_topi)))
+                            or
+                            (remove is not None and (current_topi in remove or current_table in remove.get(current_topi, [])))
+                    ):
                         write = False
                         skip = True
                 if (line.startswith("ETAB") or line.startswith("ETOP")) and skip:
