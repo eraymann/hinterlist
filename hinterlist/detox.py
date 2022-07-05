@@ -1,7 +1,7 @@
 # coding=utf-8
 import errno
+import logging
 import os
-import warnings
 
 
 def get_skeleton(in_file):
@@ -30,9 +30,9 @@ def get_skeleton(in_file):
                 inv[topi].append(tabl)
 
     elif in_file.endswith(".xtf"):
-        warnings.warn("Not implemented for interlis 2.")
+        raise NotImplementedError("Not implemented for interlis 2")
     else:
-        raise ValueError('Unsupported file extension.')
+        raise ValueError('unsupported file extension')
 
     return inv
 
@@ -52,7 +52,7 @@ def remove_unused_tables(in_file, out_file, keep=None, remove=None):
     if not os.path.isfile(in_file):
         raise IOError(errno.ENOENT, os.strerror(errno.ENOENT), in_file)
 
-    if in_file.endswith(".itf"):
+    if in_file.lower().endswith(".itf"):
 
         out_dir = os.path.dirname(out_file)
         if not os.path.isdir(out_dir):
@@ -82,8 +82,9 @@ def remove_unused_tables(in_file, out_file, keep=None, remove=None):
                     itf_writer.write(line)
                     write = True
                     skip = False
+            logging.debug("unused topics removed from {}".format(os.path.basename(in_file)))
 
     elif in_file.endswith(".xtf"):
-        warnings.warn("Not implemented for interlis 2.")
+        raise NotImplementedError("Not implemented for interlis 2")
     else:
-        raise ValueError('Unsupported file extension.')
+        raise ValueError("Unsupported file extension")
