@@ -5,7 +5,7 @@ with open("README.md", "r") as rm:
 
 setuptools.setup(
     name="hinterlist",
-    version="0.0.5",
+    version="0.0.6",
     description="INTERLIS Tools Collection",
     long_description=long_description,
     long_description_content_type="text/markdown",

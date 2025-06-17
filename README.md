@@ -11,13 +11,14 @@ This module contains tools
 That's it.
 
 ## Version History
-Version|Release Notes
----|---
-0.0.5|code adapted to new rest service
-0.0.4|read/write files with utf-8 encoding
-0.0.3|server alias as optional parameter
-0.0.2|detox submodule added
-0.0.1|initial version
+| Version | Release Notes                                  |
+|---------|------------------------------------------------|
+| 0.0.6   | code adapted to new rest service               |
+| 0.0.5   | detox either with 'keep' or 'remove' parameter |
+| 0.0.4   | read/write files with utf-8 encoding           |
+| 0.0.3   | server alias as optional parameter             |
+| 0.0.2   | detox submodule added                          |
+| 0.0.1   | initial version                                |
 
 ## Examples
 ### Check Interlis 1 file

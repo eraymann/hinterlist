@@ -12,7 +12,7 @@ def get_skeleton(in_file: str) -> dict:
     inv = {}
 
     if in_file.endswith(".itf"):
-        with open(in_file, "r", encoding="utf-8") as itf_reader:
+        with open(in_file, "r") as itf_reader:
             lines = itf_reader.readlines()
 
         topi = None
@@ -32,8 +32,13 @@ def get_skeleton(in_file: str) -> dict:
     return inv
 
 
-def remove_unused_tables(in_file: str, out_file: str, keep: dict):
+def remove_unused_tables(
+    in_file: str, out_file: str, keep: dict = None, remove: dict = None
+):
     """Removes all unused topics from itf for faster processing."""
+
+    if keep is None and remove is None:
+        return
 
     if not os.path.isfile(in_file):
         raise IOError(errno.ENOENT, os.strerror(errno.ENOENT), in_file)
@@ -43,10 +48,10 @@ def remove_unused_tables(in_file: str, out_file: str, keep: dict):
         if not os.path.isdir(out_dir):
             os.makedirs(out_dir)
 
-        with open(in_file, "r", encoding="utf-8") as itf_reader:
+        with open(in_file, "r") as itf_reader:
             lines = itf_reader.readlines()
 
-        with open(out_file, "w", encoding="utf-8") as itf_writer:
+        with open(out_file, "w") as itf_writer:
             write = True
             skip = False
             for line in lines:
@@ -57,8 +62,17 @@ def remove_unused_tables(in_file: str, out_file: str, keep: dict):
                 if line.startswith("TABL"):
                     current_table = line.replace("TABL", "").strip()
                     if (
-                        current_topi not in keep
-                        or current_table not in keep[current_topi]
+                        keep is not None
+                        and (
+                            current_topi not in keep
+                            or current_table not in keep.get(current_topi)
+                        )
+                    ) or (
+                        remove is not None
+                        and (
+                            current_topi in remove
+                            or current_table in remove.get(current_topi, [])
+                        )
                     ):
                         write = False
                         skip = True
